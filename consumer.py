@@ -3,6 +3,7 @@ import json
 import snowflake.connector
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 # Kafka Consumer Config
 consumer_conf = {
@@ -34,8 +35,8 @@ cursor = conn.cursor()
 
 def load_to_snowflake(row):
     sql = """
-        INSERT INTO PRODUCTS (ID, NAME,DESCRIPTION,PRICE)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO PRODUCTS (ID, NAME,DESCRIPTION,PRICE, UPDATED_DATE)
+        VALUES (%s, %s, %s, %s, %s)
     """
     print(row)
     # exit()
@@ -44,7 +45,8 @@ def load_to_snowflake(row):
                 row['id'],
                 row['name'],
                 row['description'],
-                row['price']
+                row['price'],
+                datetime.now()
                 ))
     conn.commit()
 
